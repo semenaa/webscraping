@@ -16,7 +16,7 @@ soup = BeautifulSoup(html_page, 'html.parser')
 articles = soup.find_all('article')
 
 for article in articles:
-    article_preview = article.find(class_='article-formatted-body')
+    article_preview = article.find_all(class_=['tm-article-body', 'tm-article-snippet__lead'])
     pass
     if keywords_found(article_preview):
         date_string = article.find('time').title
