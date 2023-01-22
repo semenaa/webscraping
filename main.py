@@ -1,23 +1,38 @@
+# import os
 import requests
 from bs4 import BeautifulSoup
 import re
 
-KEYWORDS = ['дизайн', 'фото', 'web', 'python', 'корпорац', 'разработк']
+KEYWORDS = ['python', 'игр', 'IT', 'разработк']
 html_page = requests.get('https://habr.com/ru/all/').text
-result = []
+# with open('habr.htm', 'r', encoding='utf-8') as f:
+#     html_page = f.read()
+# result = []
 
 
+# Найдены ли ключевые слова в тексте
 def keywords_found(text):
     for keyword in KEYWORDS:
-        return re.match(keyword, text)
+        s = re.search(keyword, text, re.IGNORECASE)
+        if s is not None:
+            return True
+        else:
+            return False
 
 
 soup = BeautifulSoup(html_page, 'html.parser')
 articles = soup.find_all('article')
 
 for article in articles:
-    article_preview = article.find_all(class_=['tm-article-body', 'tm-article-snippet__lead'])
-    pass
-    if keywords_found(article_preview):
-        date_string = article.find('time').title
-        name_string = article.find('h2').a.span.text
+    # article_preview = article.find(class_=['tm-article-body', 'tm-article-snippet__lead'])
+    # article_hubs = article.find(class_='tm-article-snippet__hubs')
+    # article_title = article.find('h2')
+    # Получить полный адрес статьи, затем всю статью в отдельный обьект
+    article_href = 'https://habr.com' + article.find(class_='tm-article-snippet__title-link')['href']
+    full_article = BeautifulSoup(requests.get(article_href).text, 'html.parser')
+    full_article = full_article.find('article')
+    # Ищем в превью и (Статья по ссылке может быть снята с публикации)
+    if keywords_found(article.text) or keywords_found(full_article.text):
+        date_string = article.find('time')['title']
+        title_string = article.find('h2').a.span.text
+        print(date_string, ' - ', title_string, ' - ', article_href)
