@@ -1,13 +1,9 @@
-# import os
 import requests
 from bs4 import BeautifulSoup
 import re
 
 KEYWORDS = ['python', 'игр', 'IT', 'разработк']
 html_page = requests.get('https://habr.com/ru/all/').text
-# with open('habr.htm', 'r', encoding='utf-8') as f:
-#     html_page = f.read()
-# result = []
 
 
 # Найдены ли ключевые слова в тексте
@@ -24,9 +20,6 @@ soup = BeautifulSoup(html_page, 'html.parser')
 articles = soup.find_all('article')
 
 for article in articles:
-    # article_preview = article.find(class_=['tm-article-body', 'tm-article-snippet__lead'])
-    # article_hubs = article.find(class_='tm-article-snippet__hubs')
-    # article_title = article.find('h2')
     # Получить полный адрес статьи, затем всю статью в отдельный обьект
     article_href = 'https://habr.com' + article.find(class_='tm-article-snippet__title-link')['href']
     full_article = BeautifulSoup(requests.get(article_href).text, 'html.parser')
