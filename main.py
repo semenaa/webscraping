@@ -24,7 +24,7 @@ for article in articles:
     article_href = 'https://habr.com' + article.find(class_='tm-article-snippet__title-link')['href']
     full_article = BeautifulSoup(requests.get(article_href).text, 'html.parser')
     full_article = full_article.find('article')
-    # Ищем в превью и (Статья по ссылке может быть снята с публикации)
+    # Ищем в превью и тексте статьи
     if keywords_found(article.text) or keywords_found(full_article.text):
         date_string = article.find('time')['title']
         title_string = article.find('h2').a.span.text
